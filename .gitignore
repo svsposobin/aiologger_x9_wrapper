@@ -1,0 +1,25 @@
+# IDE:
+.idea/
+
+# Pycache:
+*.pyc
+*.tmp
+
+# Environments
+.venv
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Logs
+*.log
+*logs/
+
+# Env
+*.env
+
+# Build
+dist/
+build/
+*.egg-info/
