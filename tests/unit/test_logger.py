@@ -4,9 +4,9 @@ import pytest
 import asyncio
 from pathlib import Path
 
-from aiologger_wrapper.enums import Levels
-from aiologger_wrapper.config import logger
-from aiologger_wrapper.config import LOGGERS_BY_DATE
+from aiologger_x9_wrapper.enums import Levels
+from aiologger_x9_wrapper.config import logger
+from aiologger_x9_wrapper.config import LOGGERS_BY_DATE
 
 TEST_LOGGER_NAME: str = "TEST_SERVICE"
 

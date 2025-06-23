@@ -15,7 +15,7 @@ of the DD.MM.YYYY.log format with grouping by days**
 Install the wrapper:
 
 ```shell
-pip install aiologger-wrapper
+pip install aiologger_x9_wrapper
 ```
 
 > Attention! This module will not work without the libraries: aiofiles, aiologger

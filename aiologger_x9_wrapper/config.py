@@ -7,8 +7,7 @@ from aiologger import Logger  # type: ignore
 from aiologger.handlers.files import AsyncFileHandler  # type: ignore
 from aiologger.formatters.base import Formatter  # type: ignore
 
-
-from aiologger_wrapper.enums import Levels
+from aiologger_x9_wrapper.enums import Levels
 
 LOGGERS_BY_DATE: Dict[str, Logger] = {}  # Dictionary for storing loggers by dates
 
