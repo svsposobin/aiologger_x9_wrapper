@@ -4,14 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aiologger_x9_wrapper"
-version = "0.1.0"
+version = "0.1.1"
 authors = [
     { name = "Sam", email = "svsposobin@gmail.com" }
 ]
 description = "High-level wrapper for aiologger. Asynchronous logging with automatic log directory management and daily file rotation."
 keywords = ["async", "logging", "logger"]
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = "MIT"
 license-files = ["LICENSE"]
 classifiers = [
@@ -25,7 +25,7 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/svsposobin/AsyncLoggerWrapper"
+Homepage = "https://github.com/svsposobin/aiologger_x9_wrapper"
 
 [tool.setuptools.packages]
 find = { }
