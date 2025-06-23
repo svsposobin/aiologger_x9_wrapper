@@ -23,7 +23,7 @@ pip install aiologger_x9_wrapper
 ### Import the required dependencies:
 
 ```
-from aiologger-wrapper import logger, Levels
+from aiologger_x9_wrapper import logger, Levels
 
 # Where Levels:
 class Levels(Enum):
