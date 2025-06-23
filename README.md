@@ -42,8 +42,8 @@ await logger(
         # Required
         level: Levels,  # Registered logging level via enums -> Levels (Exapmle: Levels.INFO)
         message: str,  # Any message in str format
+        directory_path: Path | str  # Path where the log folder will be created  (Example: Path(__file__).parent
         # Optional:
-        directory_path: Path | str = Path(__file__).parent,  # Path where the log folder will be created
         directory_name: Path | str = Path("logs"),  # Name of the folder for logs
         logger_name: str = "SERVICE"  # Logger name in logs
 )
