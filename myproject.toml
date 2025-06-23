@@ -1,5 +1,5 @@
 [project]
-name = 'AsyncLoggerWrapper'
+name = 'aiologger_x9_wrapper'
 
 [tool.mypy]
 disallow_any_generics = false
