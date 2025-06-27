@@ -119,7 +119,7 @@ CUSTOM_LOGGER_STORAGE: Dict[str, AsyncLogger] = {}
 MY_LOGGER: Logger = Logger(
     log_formatter=MY_LOG_FORMATTER,
     folder_handler=MY_FOLDER_HANDLER,
-    logger_storage=CUSTOM_LOGGER_STORAGE
+    loggers_storage=CUSTOM_LOGGER_STORAGE
 )
 ```
 

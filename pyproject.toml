@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aiologger_x9_wrapper"
-version = "0.2.1"
+version = "0.2.2"
 authors = [
     { name = "Sam", email = "svsposobin@gmail.com" }
 ]

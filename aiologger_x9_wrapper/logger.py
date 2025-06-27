@@ -21,7 +21,7 @@ class Logger:
             self,
             log_formatter: LogFormatter,
             folder_handler: FolderHandler,
-            logger_storage: Optional[Dict[str, AsyncLogger]] = None,
+            loggers_storage: Optional[Dict[str, AsyncLogger]] = None,
     ) -> None:
         """Necessary logger configuration for recording logs
 
@@ -30,11 +30,13 @@ class Logger:
 
             folder_handler (FileHandler): Configuration for creating a folder
 
-            logger_storage (Dict[str, AioLogger]): Logger storage used
+            loggers_storage (Dict[str, AioLogger]): Logger storage used
         """
         self._log_format: FormatterDTO = log_formatter.build_format()
         self._file_handler: FolderHandlerDTO = folder_handler.build_format()
-        self.__loggers_storage: Dict[str, AsyncLogger] = logger_storage or LOGGERS_STORAGE
+        self.__loggers_storage: Dict[
+            str, AsyncLogger
+        ] = loggers_storage if loggers_storage is not None else LOGGERS_STORAGE
 
         self.__folder: Path = self.__create_folder()
 

@@ -25,4 +25,4 @@ __all__ = [
     "AsyncLogger"
 ]
 
-__version__ = "0.2.1"  # Access to version
+__version__ = "0.2.2"  # Access to version
