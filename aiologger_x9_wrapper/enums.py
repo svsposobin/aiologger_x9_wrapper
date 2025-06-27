@@ -7,3 +7,10 @@ class Levels(Enum):
     WARNING = "WARNING"
     ERROR = "ERROR"
     CRITICAL = "CRITICAL"
+
+
+class LogFormats(Enum):
+    TIME = "%(asctime)s"
+    NAME = "%(name)s"
+    LEVEL = "%(levelname)s"
+    MESSAGE = "%(message)s"

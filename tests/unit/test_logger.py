@@ -1,60 +1,114 @@
-from datetime import datetime
+from typing import Dict
 
 import pytest
-import asyncio
+
+from datetime import datetime
 from pathlib import Path
+from asyncio import sleep as asyncio_sleep
 
-from aiologger_x9_wrapper.enums import Levels
-from aiologger_x9_wrapper.config import logger
-from aiologger_x9_wrapper.config import LOGGERS_BY_DATE
+from aiologger import Logger as AioLogger  # type: ignore
 
-TEST_LOGGER_NAME: str = "TEST_SERVICE"
+from aiologger_x9_wrapper.enums import Levels, LogFormats
+from aiologger_x9_wrapper.formatters import LogFormatter
+from aiologger_x9_wrapper.handlers import FolderHandler
+from aiologger_x9_wrapper.logger import Logger, LOGGERS_STORAGE, shutdown_loggers
 
 
 @pytest.mark.asyncio
 class TestLogger:
     @pytest.mark.parametrize(
-        "level, message, logger_name",
+        "log_formatter, filename, logger_name, log_level, log_message",
         [
-            (Levels.INFO, "Info message!", TEST_LOGGER_NAME),
-            (Levels.DEBUG, "Debug message!", TEST_LOGGER_NAME),
-            (Levels.CRITICAL, "Critical message!", TEST_LOGGER_NAME),
-            (Levels.ERROR, "Error message!", TEST_LOGGER_NAME),
-            (Levels.WARNING, "Warning message!", TEST_LOGGER_NAME),
+            (
+                LogFormatter(),
+                "logs",
+                "SERVICE",
+                Levels.DEBUG,
+                "Hello World!_1",
+            ),
+            (
+                LogFormatter(
+                    log_format=(LogFormats.NAME, LogFormats.LEVEL, LogFormats.MESSAGE),
+                ),
+                "MY_LOGS",
+                "TEST_SERVICE",
+                Levels.INFO,
+                "Hello World!_2"
+            )
         ]
     )
     async def test_logger(
             self,
-            level: Levels,
-            message: str,
+            log_formatter: LogFormatter,
+            filename: str,
             logger_name: str,
-            tmp_path: Path  # Temporary directory pytest
+            log_level: Levels,
+            log_message: str,
+
+            tmp_path: Path,  # Temporary directory pytest
     ) -> None:
-        await logger(
-            level=level,
-            message=message,
-            directory_path=tmp_path,
-            logger_name=logger_name
+        tmp_file_handler: FolderHandler = FolderHandler(
+            path=tmp_path,
+            name=filename,
         )
-        await asyncio.sleep(0.2)  # Guaranteed recording time
 
-        today = datetime.now().strftime("%d.%m.%Y")
-        if today in LOGGERS_BY_DATE:
-            log_instance = LOGGERS_BY_DATE[today]
-            await log_instance.shutdown()
-            del LOGGERS_BY_DATE[today]
+        custom_logger: Logger = Logger(
+            log_formatter=log_formatter,
+            folder_handler=tmp_file_handler,
+        )
 
-        log_dir = tmp_path / "logs"
-        log_files = list(log_dir.glob("*.log"))
+        await custom_logger.write_log(
+            log_level=log_level,
+            message=log_message,
+            logger_name=logger_name,
+        )
+        await asyncio_sleep(0.1)  # Guaranteed recording time
 
-        assert len(log_files) == 1, f"Expected 1 file, found {len(log_files)}"
+        current_date: str = datetime.now().strftime("%d.%m.%Y")
+        if current_date in LOGGERS_STORAGE:
+            logger: AioLogger = LOGGERS_STORAGE[current_date]
 
-        log_file = log_files[0]
-        content = log_file.read_text()
+            await logger.shutdown()
+            del LOGGERS_STORAGE[current_date]
 
-        assert message in content, f"Message '{message}' not found"
-        assert level.value in content, f"Level '{level.value}' not found"
+        tmp_log_dir: Path = tmp_path / filename
+        tmp_log_files = list(tmp_log_dir.glob("*.log"))
+
+        assert len(tmp_log_files) == 1, f"Expected 1 file, found {len(tmp_log_files)}"
+
+        tmp_log_file: Path = tmp_log_files[0]
+        content = tmp_log_file.read_text()
+
+        assert log_message in content, f"Message '{log_message}' not found"
+        assert log_level.value in content, f"Level '{log_level.value}' not found"
         assert logger_name in content, f"Logger name '{logger_name}' not found"
 
-        log_file.unlink()
-        log_dir.rmdir()
+        tmp_log_file.unlink()
+        tmp_log_dir.rmdir()
+
+
+@pytest.mark.asyncio
+class TestShutdownLoggers:
+    @pytest.mark.parametrize(
+        "logger_key, logger_value",
+        [
+            ("01.01.2001", AioLogger()),
+            ("02.02.2002", AioLogger()),
+            ("03.03.2003", AioLogger()),
+        ]
+    )
+    async def test_shutdown_loggers(
+            self,
+            logger_key: str,
+            logger_value: AioLogger,
+    ) -> None:
+        test_loggers_storage: Dict[str, AioLogger] = {
+            logger_key: logger_value
+        }
+
+        assert logger_key in test_loggers_storage, f"{logger_key} not in storage"
+        assert test_loggers_storage[logger_key] == logger_value
+
+        await shutdown_loggers(loggers_storage=test_loggers_storage)
+
+        assert test_loggers_storage == {}

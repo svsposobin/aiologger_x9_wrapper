@@ -23,3 +23,6 @@ venv.bak/
 dist/
 build/
 *.egg-info/
+
+# Coverage
+.coverage
