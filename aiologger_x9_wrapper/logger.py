@@ -93,7 +93,9 @@ async def shutdown_loggers(loggers_storage: Optional[Dict[str, AsyncLogger]] = N
     if loggers_storage is None:
         loggers_storage = LOGGERS_STORAGE
 
-    for date, logger in list(loggers_storage.keys()):
+    for date in list(loggers_storage.keys()):
+        logger: AsyncLogger = loggers_storage.get(date)  # type: ignore
+
         if logger:
             await logger.shutdown()
             del loggers_storage[date]
